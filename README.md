@@ -1,24 +1,16 @@
-# README
+# Deploying on Cloud Run
+GOOGLE_CLOUD_PROJECT=norcal-282302
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+RAILS_ENV=production bundle exec rails assets:precompile
 
-Things you may want to cover:
+docker build -t datastore_rails:0.0.1 .
 
-* Ruby version
+docker run -d -it -p  3000:3000 datastore_rails:0.0.1
 
-* System dependencies
+docker tag datastore_rails:0.0.1 us.gcr.io/${GOOGLE_CLOUD_PROJECT}/datastore_rails:0.0.1
 
-* Configuration
+docker push us.gcr.io/${GOOGLE_CLOUD_PROJECT}/datastore_rails:0.0.1
 
-* Database creation
+gcloud run deploy --image=us.gcr.io/${GOOGLE_CLOUD_PROJECT}/datastore_rails:0.0.1 --platform managed --concurrency 1
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+terraform apply -var-file=prod.tfvars
