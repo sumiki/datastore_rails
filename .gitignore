@@ -31,3 +31,10 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+.idea
+.DS_Store
+tf/.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
