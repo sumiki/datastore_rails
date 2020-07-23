@@ -15,7 +15,5 @@ else
   # Local Emuratorの指定
   # ENV['DATASTORE_PROJECT_ID'] = data['project_id']
 
-  Process.spawn('gcloud beta emulators datastore start')
+  # Process.spawn('gcloud beta emulators datastore start')
 end
-
-

@@ -49,4 +49,11 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'activemodel-datastore'
-gem 'dotenv-rails', groups: [:development, :test]
+
+group :development, :test do
+  gem 'dotenv-rails'
+  gem 'rspec-rails', '~> 4.0.1'
+  gem 'pry'
+end
+
+
