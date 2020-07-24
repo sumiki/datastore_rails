@@ -61,9 +61,7 @@ module Sorcery
         end
 
         def find_by_token(token_attr_name, token)
-          condition = @klass.arel_table[token_attr_name].eq(token)
-
-          @klass.where(condition).first
+          @klass.all(where: [token_attr_name, '=', token]).first
         end
 
         def find_by_activation_token(token)

@@ -26,8 +26,15 @@ RSpec.describe User, :type => :model do
 
   describe 'User.authenticate' do
     let!(:user) { create(:user) }
-    it '' do
-      p User.authenticate('sumikio@gmail.com', 'P@ssw0rd')
+
+    it 'success' do
+      login_result = User.authenticate('sumikio@gmail.com', 'P@ssw0rd')
+      expect(login_result).to be_truthy
+    end
+
+    it 'fails' do
+      login_result = User.authenticate('sumikio@gmail.com', 'P@ssw0rd1')
+      expect(login_result).to be_falsy
     end
   end
 
