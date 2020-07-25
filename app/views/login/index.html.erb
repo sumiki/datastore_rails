@@ -1,0 +1,8 @@
+<h1>Login</h1>
+<div>
+  <%= form_tag login_index_path, method: :post do %>
+    <div><label>Email:</label><%= text_field_tag :email %></div>
+    <div><label>Password:</label><%= password_field_tag :password %></div>
+    <div><%= submit_tag 'Login' %></div>
+  <% end %>
+</div>

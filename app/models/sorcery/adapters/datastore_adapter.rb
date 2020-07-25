@@ -69,7 +69,7 @@ module Sorcery
         end
 
         def find_by_id(id)
-          @klass.find_by_id(id)
+          @klass.find(id)
         end
 
         def find_by_username(username)
