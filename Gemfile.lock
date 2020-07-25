@@ -127,6 +127,10 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (~> 0.14)
+    graphiql-rails (1.7.0)
+      railties
+      sprockets-rails
+    graphql (1.11.1)
     grpc (1.30.2)
       google-protobuf (~> 3.12)
       googleapis-common-protos-types (~> 1.0)
@@ -298,6 +302,8 @@ DEPENDENCIES
   capybara (>= 2.15)
   dotenv-rails
   factory_bot_rails
+  graphiql-rails
+  graphql
   jbuilder (~> 2.7)
   listen (~> 3.2)
   pry
