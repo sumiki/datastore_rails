@@ -1,4 +1,4 @@
-module SourceyExt
+module SorceryExt
   # encrypt tokens using current encryption_provider.
   def encrypt(*tokens)
     return tokens.first if @sorcery_config.encryption_provider.nil?
@@ -10,4 +10,4 @@ module SourceyExt
   end
 end
 
-Sorcery::Model::ClassMethods.prepend(SourceyExt)
+Sorcery::Model::ClassMethods.prepend(SorceryExt)
