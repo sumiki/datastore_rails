@@ -6,11 +6,8 @@ class GraphqlController < ApplicationController
   before_action :current_user
 
   def execute
-    p '---'
     variables = ensure_hash(params[:variables])
-    p variables
     query = params[:query]
-    p query
     operation_name = params[:operationName]
     context = {
       # Query context goes here, for example:

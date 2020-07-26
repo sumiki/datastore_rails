@@ -1,6 +1,9 @@
 <template>
   <div class="m-10">
     Account {{accountId}}
+    <div v-for="holding in allHoldings">
+      <div v-text="holding.name"></div>
+    </div>
   </div>
 </template>
 
@@ -19,8 +22,8 @@ export default {
   apollo: {
     allHoldings: {
       query: ALL_HOLDINGS_QUERY,
-      variables: {
-        accountId: 49,
+      variables: function(){
+        return {accountId: this.accountId}
       }
     }
   }
