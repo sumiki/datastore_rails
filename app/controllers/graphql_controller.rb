@@ -3,14 +3,18 @@ class GraphqlController < ApplicationController
   # This allows for outside API access while preventing CSRF attacks,
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
+  before_action :current_user
 
   def execute
+    p '---'
     variables = ensure_hash(params[:variables])
+    p variables
     query = params[:query]
+    p query
     operation_name = params[:operationName]
     context = {
       # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: current_user&.properties_with_id,
     }
     result = DatastoreRailsSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result

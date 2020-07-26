@@ -4,7 +4,7 @@ class Member::MenuController < ApplicationController
   def index
     @accounts = Account.all(where: [ 'user_id', '=', current_user.id ])
     @server_side_values = {
-      accounts: @accounts.map{|item| item.to_json },
+      accounts: @accounts.map{|item| item.properties_with_id },
     }
   end
 

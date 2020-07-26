@@ -1,7 +1,15 @@
 module Types
   class QueryType < Types::BaseObject
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    # /users
+    field :all_holdings, [Types::HoldingType], null: false do
+      argument :accountId, ID, required: true
+    end
+
+    def all_holdings(accountId:)
+      user_id = context[:current_user]&.[](:id)
+      p Holding.all.map{|item| item.properties_with_id }
+      Holding.all.map{|item| item.properties_with_id }
+    end
 
     # TODO: remove me
     field :test_field, String, null: false,
