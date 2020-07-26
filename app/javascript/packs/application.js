@@ -3,15 +3,22 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-require("@rails/ujs").start()
-require("turbolinks").start()
-require("channels")
+// require("@rails/ujs").start()
+// require("turbolinks").start()
+// require("channels")
 
 import "stylesheets/application"
 
-// Uncomment to copy all static images under ../images to the output folder and reference
-// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
-// or the `imagePath` JavaScript helper below.
-//
-// const images = require.context('../images', true)
-// const imagePath = (name) => images(name, true)
+import Vue from 'vue'
+window.header = new Vue({
+  el: "#header",
+  data: {
+    open: false,
+  },
+  methods:{
+    toggleHeader(e){
+      e.preventDefault()
+      this.open = !!!this.open
+    }
+  }
+})
