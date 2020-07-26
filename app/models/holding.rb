@@ -10,7 +10,7 @@ class Holding < DatastoreBase
                 :sold_date
 
   def entity_properties
-    %w[id user_id account_id ticker_symbol name purchase_price purchase_date sold_price sold_date]
+    %w[user_id account_id ticker_symbol name purchase_price purchase_date sold_price sold_date]
   end
 
 end
