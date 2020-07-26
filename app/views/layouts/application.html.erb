@@ -13,7 +13,7 @@
   <body>
     <nav id="header" class="flex items-center justify-between flex-wrap bg-gray-500 p-6">
       <div class="flex items-center flex-shrink-0 text-white mr-6">
-        <a href="/" class="font-semibold text-xl tracking-tight">Note</span>
+        <a href="/" class="font-semibold text-xl tracking-tight">Note</a>
       </div>
       <div class="block">
         <button
@@ -45,4 +45,5 @@
     <%= yield %>
   </body>
   <%= javascript_pack_tag 'application' %>
+  <%= yield :javascript %>
 </html>

@@ -2,6 +2,10 @@ class Member::MenuController < ApplicationController
   before_action :require_login
 
   def index
+    @accounts = Account.all(where: [ 'user_id', '=', current_user.id ])
+    @server_side_values = {
+      accounts: @accounts.map{|item| item.to_json },
+    }
   end
 
   protected

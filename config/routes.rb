@@ -11,5 +11,6 @@ Rails.application.routes.draw do
     get '' => "menu#index"
     get 'menu' => "menu#index"
   end
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  get 'seeds' => 'seeds#index'
 end

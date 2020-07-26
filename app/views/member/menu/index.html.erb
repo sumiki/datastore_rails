@@ -1,2 +1,13 @@
-<h1>Member::Menu#index</h1>
-<p>Find me in app/views/member/menu/index.html.erb</p>
+
+<div
+  id="dashboard"
+  class="m-10"
+  server-side-values='<%= @server_side_values.to_json %>'
+>
+  <%= select_tag :account, options_for_select(@accounts.map{|ac| [ ac.name, ac.id ] }, nil), {  '@change': 'handleAccountChange' } %>
+
+  <account :account-id='accountId'></account>
+</div>
+<% content_for :javascript do %>
+  <%= javascript_pack_tag 'dashboard' %>
+<% end %>

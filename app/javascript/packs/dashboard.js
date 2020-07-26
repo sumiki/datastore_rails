@@ -6,17 +6,31 @@
 // All it does is render <div>Hello Vue</div> at the bottom of the page.
 
 import Vue from 'vue'
-import Header from '../components/header.vue'
+import Account from '../components/account.vue'
 
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new Vue({
-    render: h => h(App)
-  }).$mount()
-  document.body.appendChild(app.$el)
-
-  console.log(app)
+window.header = new Vue({
+  el: "#dashboard",
+  components: {
+    Account
+  },
+  beforeMount () {
+    const serverSideValues = JSON.parse(this.$el.getAttribute('server-side-values'));
+    this.serverSideValues = serverSideValues
+    this.accountId = serverSideValues['accounts'][0].id
+  },
+  data: function () {
+    return {
+      serverSideValues: {},
+      accountId: null,
+    }
+  },
+  methods: {
+    handleAccountChange(e){
+      e.preventDefault()
+      this.accountId = e.target.value
+    }
+  }
 })
-
 
 // The above code uses Vue without the compiler, which means you cannot
 // use Vue to target elements in your existing html templates. You would

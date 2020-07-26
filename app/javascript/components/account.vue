@@ -1,16 +1,12 @@
 <template>
-  <div id="app">
-    <p>{{ message }}</p>
+  <div class="m-10">
+    Account {{accountId}}
   </div>
 </template>
 
 <script>
 export default {
-  data: function () {
-    return {
-      message: "Hello Vue!"
-    }
-  }
+  props: ['accountId'],
 }
 </script>
 
