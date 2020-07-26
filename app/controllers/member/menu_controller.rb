@@ -7,6 +7,6 @@ class Member::MenuController < ApplicationController
   protected
 
   def not_authenticated
-    redirect_to login_url, alert: 'ログインしてください'
+    redirect_to login_index_url, alert: 'ログインしてください'
   end
 end
