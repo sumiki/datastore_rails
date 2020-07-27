@@ -10,15 +10,17 @@
 import "stylesheets/application"
 
 import Vue from 'vue'
-window.header = new Vue({
-  el: "#header",
-  data: {
-    open: false,
-  },
-  methods:{
-    toggleHeader(e){
-      e.preventDefault()
-      this.open = !!!this.open
+document.addEventListener('DOMContentLoaded', () => {
+  window.header = new Vue({
+    el: "#header",
+    data: {
+      open: false,
+    },
+    methods:{
+      toggleHeader(e){
+        e.preventDefault()
+        this.open = !!!this.open
+      }
     }
-  }
+  })
 })
