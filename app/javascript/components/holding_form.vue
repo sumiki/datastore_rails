@@ -34,19 +34,23 @@
             <div class="mt-2">
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Ticket Symbol</label>
-                <input type="text" class="p-1 border" name="ticket_symbol" :value="form_ticket_symbol" placeholder="SPY" >
+                <input type="text" class="p-1 border" name="ticket_symbol" :value="formTicketSymbol" placeholder="SPY" >
+                <div :class="errorFieldClass" v-text="errorTicketSymbol"></div>
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Name</label>
-                <input type="text" class="p-1 border" name="name" :value="form_name" placeholder="SP500"  >
+                <input type="text" class="p-1 border" name="name" :value="formName" placeholder="SP500" >
+                <div :class="errorFieldClass" v-text="errorName"></div>
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Purchase Price</label>
-                <input type="text" class="p-1 border" name="name" :value="form_purchase_price" placeholder="999.99" >
+                <input type="text" class="p-1 border" name="name" :value="formPurchasePrice" placeholder="999.99" >
+                <div :class="errorFieldClass" v-text="errorPurchasePrice"></div>
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Purchase Count</label>
-                <input type="text" class="p-1 border" name="name" :value="form_purchase_count" placeholder="10" >
+                <input type="text" class="p-1 border" name="name" :value="formPurchaseCount" placeholder="10" >
+                <div :class="errorFieldClass" v-text="errorPurchaseCount"></div>
               </div>
             </div>
           </div>
@@ -75,10 +79,15 @@
     props: ['accountId'],
     data () {
       return {
-        form_ticket_symbol: '',
-        form_name: '',
-        form_purchase_count: '',
-        form_purchase_price: '',
+        formTicketSymbol: '',
+        formName: '',
+        formPurchaseCount: '',
+        formPurchasePrice: '',
+        errorTicketSymbol: '',
+        errorName: '',
+        errorPurchaseCount: '',
+        errorPurchasePrice: '',
+        errorFieldClass: 'text-red-600 font-small'
       }
     },
     methods: {
