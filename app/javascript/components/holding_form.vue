@@ -58,7 +58,7 @@
       </div>
       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
-            <button @click="closeHoldingModal" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+            <button @click="handleSubmit" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5">
               Create
             </button>
           </span>
@@ -72,8 +72,7 @@
   </div>
 </template>
 <script>
-
-  import { ALL_HOLDINGS_QUERY } from '../constants/graphql'
+  import gql from 'graphql-tag'
 
   export default {
     props: ['accountId'],
@@ -87,16 +86,54 @@
         errorName: '',
         errorPurchaseCount: '',
         errorPurchasePrice: '',
-        errorFieldClass: 'text-red-600 font-small'
+        errorFieldClass: 'text-red-600 font-small',
+        createHolding: {},
       }
     },
     methods: {
       closeHoldingModal(e){
         this.$emit('closeHoldingModal', e)
+      },
+      handleSubmit(e){
+        e.preventDefault()
+
+        // We save the user input in case of an error
+        const newTag = this.newTag
+        // We clear it early to give the UI a snappy feel
+        this.newTag = ''
+        // Call to the graphql mutation
+        this.$apollo.mutate({
+          // Query
+          mutation: gql`mutation ($name: String!){
+            createHolding(input: { name: $name }) {
+              holding {
+                name
+              }
+              errors
+            }
+          }`,
+          // Parameters
+          variables: {
+            name: 'abc',
+          },
+          // Update the cache with the result
+          // The query will be updated with the optimistic response
+          // and then with the real result of the mutation
+          update: (store, { data: { addTag } }) => {
+
+          },
+        }).then((data) => {
+          // Result
+          console.log(data)
+        }).catch((error) => {
+          // Error
+          console.error(error)
+          // We restore the initial user input
+          this.newTag = newTag
+        })
+
       }
     },
-    apollo: {
 
-    }
   }
 </script>
