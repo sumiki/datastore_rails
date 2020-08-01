@@ -4,14 +4,11 @@ class Holding < DatastoreBase
                 :account_id,
                 :ticker_symbol,
                 :name,
-                :purchase_price,
-                :purchase_date,
-                :sold_price,
-                :sold_date
+                :details
 
-  def entity_properties
-    %w[user_id account_id ticker_symbol name purchase_price purchase_date sold_price sold_date]
-  end
+    def entity_properties
+      %w[user_id account_id ticker_symbol name details]
+    end
 
   def self.tidy_list(holdings)
     hash = {}
@@ -24,5 +21,6 @@ class Holding < DatastoreBase
     end
     hash.keys.map{|key| hash[key] }
   end
+
 
 end

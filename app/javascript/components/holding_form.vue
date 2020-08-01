@@ -34,23 +34,31 @@
             <div class="mt-2">
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Ticket Symbol</label>
-                <input type="text" class="p-1 border" name="ticket_symbol" :value="formTicketSymbol" placeholder="SPY" >
-                <div :class="errorFieldClass" v-text="errorTicketSymbol"></div>
+                <input type="text" v-model="formTickerSymbol" class="p-1 border" name="ticket_symbol" placeholder="SPY" >
+                <div :class="errorFieldClass" v-for="errorText in errorTickerSymbol">
+                  <div v-text="errorText"></div>
+                </div>
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Name</label>
-                <input type="text" class="p-1 border" name="name" :value="formName" placeholder="SP500" >
-                <div :class="errorFieldClass" v-text="errorName"></div>
+                <input type="text" v-model="formName" class="p-1 border" name="name" placeholder="SP500" >
+                <div :class="errorFieldClass" v-for="errorText in errorName">
+                  <div v-text="errorText"></div>
+                </div>
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Purchase Price</label>
-                <input type="text" class="p-1 border" name="name" :value="formPurchasePrice" placeholder="999.99" >
-                <div :class="errorFieldClass" v-text="errorPurchasePrice"></div>
+                <input type="text" v-model="formPurchasePrice" class="p-1 border" name="name" placeholder="999.99" >
+                <div :class="errorFieldClass" v-for="errorText in errorPurchasePrice">
+                  <div v-text="errorText"></div>
+                </div>
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Purchase Count</label>
-                <input type="text" class="p-1 border" name="name" :value="formPurchaseCount" placeholder="10" >
-                <div :class="errorFieldClass" v-text="errorPurchaseCount"></div>
+                <input type="text" v-model="formPurchaseCount" class="p-1 border" name="name" placeholder="10" >
+                <div :class="errorFieldClass" v-for="errorText in errorPurchaseCount">
+                  <div v-text="errorText"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -78,14 +86,14 @@
     props: ['accountId'],
     data () {
       return {
-        formTicketSymbol: '',
+        formTickerSymbol: '',
         formName: '',
         formPurchaseCount: '',
         formPurchasePrice: '',
-        errorTicketSymbol: '',
-        errorName: '',
-        errorPurchaseCount: '',
-        errorPurchasePrice: '',
+        errorTickerSymbol: [],
+        errorName: [],
+        errorPurchaseCount: [],
+        errorPurchasePrice: [],
         errorFieldClass: 'text-red-600 font-small',
         createHolding: {},
       }
@@ -94,8 +102,52 @@
       closeHoldingModal(e){
         this.$emit('closeHoldingModal', e)
       },
+      validateAll(){
+        let resValidateTicketSymbol = this.validateTickerSymbol()
+        let resValidateName = this.validateName()
+        let resValidatePurchaseCount = this.validatePurchaseCount()
+        let resValidatePurchasePrice = this.validatePurchasePrice()
+        return resValidateTicketSymbol &&
+          resValidateName &&
+          resValidatePurchaseCount &&
+          resValidatePurchasePrice
+      },
+      validateTickerSymbol(){
+        let errorTickerSymbol = []
+        if(this.formTickerSymbol === ''){
+          errorTickerSymbol.push('Please enter TicketSymbol')
+        }
+        this.errorTickerSymbol = errorTickerSymbol
+        return errorTickerSymbol.length === 0
+      },
+      validateName(){
+        let errorName = []
+        if(this.formName === ''){
+          errorName.push('Please enter Name')
+        }
+        this.errorName = errorName
+        return errorName.length === 0
+      },
+      validatePurchaseCount(){
+        let errorPurchaseCount = []
+        if(this.formPurchaseCount === ''){
+          errorPurchaseCount.push('Please enter Purchase Count')
+        }
+        this.errorPurchaseCount = errorPurchaseCount
+        return errorPurchaseCount.length === 0
+      },
+      validatePurchasePrice(){
+        let errorPurchasePrice = []
+        if(this.formPurchasePrice === ''){
+          errorPurchasePrice.push('Please enter Purchase Price')
+        }
+        this.errorPurchasePrice = errorPurchasePrice
+        return errorPurchasePrice.length === 0
+      },
       handleSubmit(e){
         e.preventDefault()
+
+        if(!this.validateAll()) return
 
         // We save the user input in case of an error
         const newTag = this.newTag
@@ -104,17 +156,21 @@
         // Call to the graphql mutation
         this.$apollo.mutate({
           // Query
-          mutation: gql`mutation ($name: String!){
-            createHolding(input: { name: $name }) {
+          mutation: gql`mutation ($tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!){
+            createHolding(input: { name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice }) {
               holding {
                 name
+                tickerSymbol
               }
               errors
             }
           }`,
           // Parameters
           variables: {
-            name: 'abc',
+            tickerSymbol: this.formTickerSymbol,
+            name: this.formName,
+            purchaseCount: parseInt(this.formPurchaseCount),
+            purchasePrice: parseFloat(this.formPurchasePrice),
           },
           // Update the cache with the result
           // The query will be updated with the optimistic response
