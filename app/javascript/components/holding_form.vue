@@ -87,8 +87,7 @@
   </div>
 </template>
 <script>
-  import gql from 'graphql-tag'
-
+  import { CREATE_HOLDING_MUTATION } from '../constants/graphql'
   export default {
     props: ['accountId'],
     data () {
@@ -165,15 +164,7 @@
         // Call to the graphql mutation
         this.$apollo.mutate({
           // Query
-          mutation: gql`mutation ($accountId: Int!, $tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!, $purchaseDate: String!){
-            createHolding(input: { accountId: $accountId, name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice, purchaseDate: $purchaseDate }) {
-              holding {
-                name
-                tickerSymbol
-              }
-              errors
-            }
-          }`,
+          mutation: CREATE_HOLDING_MUTATION,
           // Parameters
           variables: {
             accountId: parseInt(this.accountId),
@@ -192,9 +183,7 @@
           console.log(error)
           // We restore the initial user input
         })
-
       }
     },
-
   }
 </script>

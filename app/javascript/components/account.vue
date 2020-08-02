@@ -18,7 +18,11 @@
       <tr v-for="holding in allHoldings">
         <td><div v-text="holding.tickerSymbol"></div></td>
         <td><div v-text="holding.name"></div></td>
-        <td><div v-text="holding.count"></div></td>
+        <td>
+          <div v-for="detail in holding.aggregateDetails">
+            <div v-text="detail"></div>
+          </div>
+        </td>
       </tr>
     </table>
     <HoldingForm

@@ -10,16 +10,8 @@ class Holding < DatastoreBase
       %w[user_id account_id ticker_symbol name aggregate_details]
     end
 
-  def self.aggregate_details(holdings)
-    hash = {}
-    holdings.each do |holding|
-      hash[holding.ticker_symbol] ||= {}
-      hash[holding.ticker_symbol][:ticker_symbol] ||= holding.ticker_symbol
-      hash[holding.ticker_symbol][:name] ||= holding.name
-      hash[holding.ticker_symbol][:count] ||= 0
-      hash[holding.ticker_symbol][:count] += 1
-    end
-    hash.keys.map{|key| hash[key] }
+  def self.all_aggregate_details(holdings)
+    holdings.map{|item| item.properties_with_id }
   end
 
   def self.purchase(user_id:, account_id:, ticker_symbol:, name:, purchase_price:, purchase_count:, purchase_date:)

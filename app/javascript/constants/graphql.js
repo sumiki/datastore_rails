@@ -5,7 +5,18 @@ export const ALL_HOLDINGS_QUERY = gql`
     allHoldings(accountId: $accountId) {
       name
       tickerSymbol
-      count
+      aggregateDetails
+    }
+  }
+`
+export const CREATE_HOLDING_MUTATION = gql`
+  mutation ($accountId: Int!, $tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!, $purchaseDate: String!){
+    createHolding(input: { accountId: $accountId, name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice, purchaseDate: $purchaseDate }) {
+      holding {
+        name
+        tickerSymbol
+      }
+      errors
     }
   }
 `

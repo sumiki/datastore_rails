@@ -8,7 +8,7 @@ module Types
     def all_holdings(accountId:)
       user_id = context[:current_user]&.[](:id)
       holdings = Holding.all( where: [ ['user_id', '=', user_id], ['account_id', '=', accountId.to_i] ] )
-      Holding.aggregate_details(holdings)
+      Holding.all_aggregate_details(holdings)
     end
 
     # TODO: remove me

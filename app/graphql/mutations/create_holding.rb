@@ -21,7 +21,7 @@ class Mutations::CreateHolding < Mutations::BaseMutation
       purchase_price: purchase_price,
       purchase_date: purchase_date_obj,
     )
-
+    holding.set_aggregate_details
     {
       holding: holding,
       errors: []
