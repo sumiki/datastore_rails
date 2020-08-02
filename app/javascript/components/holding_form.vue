@@ -60,6 +60,13 @@
                   <div v-text="errorText"></div>
                 </div>
               </div>
+              <div class="m-3">
+                <label class="block text-sm leading-5 text-gray-500">Purchase Date</label>
+                <input type="text" v-model="formPurchaseDate" class="p-1 border" name="name" placeholder="2020/07/01" >
+                <div :class="errorFieldClass" v-for="errorText in errorPurchaseDate">
+                  <div v-text="errorText"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -90,10 +97,12 @@
         formName: 'SP500',
         formPurchaseCount: '1',
         formPurchasePrice: '1.01',
+        formPurchaseDate: '2020/07/01',
         errorTickerSymbol: [],
         errorName: [],
         errorPurchaseCount: [],
         errorPurchasePrice: [],
+        errorPurchaseDate: [],
         errorFieldClass: 'text-red-600 font-small',
         createHolding: {},
       }
@@ -156,8 +165,8 @@
         // Call to the graphql mutation
         this.$apollo.mutate({
           // Query
-          mutation: gql`mutation ($accountId: Int!, $tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!){
-            createHolding(input: { accountId: $accountId, name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice }) {
+          mutation: gql`mutation ($accountId: Int!, $tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!, $purchaseDate: String!){
+            createHolding(input: { accountId: $accountId, name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice, purchaseDate: $purchaseDate }) {
               holding {
                 name
                 tickerSymbol
@@ -172,6 +181,7 @@
             name: this.formName,
             purchaseCount: parseInt(this.formPurchaseCount),
             purchasePrice: parseFloat(this.formPurchasePrice),
+            purchaseDate: this.formPurchaseDate,
           },
         }).then((data) => {
           // Result

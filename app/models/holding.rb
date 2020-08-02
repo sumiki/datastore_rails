@@ -9,7 +9,7 @@ class Holding < DatastoreBase
       %w[user_id account_id ticker_symbol name details]
     end
 
-  def self.tidy_list(holdings)
+  def self.aggregate_list(holdings)
     hash = {}
     holdings.each do |holding|
       hash[holding.ticker_symbol] ||= {}
@@ -21,7 +21,7 @@ class Holding < DatastoreBase
     hash.keys.map{|key| hash[key] }
   end
 
-  def self.purchase(user_id:, account_id:, ticker_symbol:, name:, purchase_price:, purchase_count:)
+  def self.purchase(user_id:, account_id:, ticker_symbol:, name:, purchase_price:, purchase_count:, purchase_date:)
     holding = Holding.new
     holding.account_id = account_id
     holding.user_id = user_id
@@ -34,15 +34,24 @@ class Holding < DatastoreBase
       detail = HoldingDetail.new(
         ticker_symbol: ticker_symbol,
         holding_id: holding.id,
-        purchase_price: purchase_price)
+        purchase_price: purchase_price,
+        purchase_date: purchase_date,
+      )
       detail.save
     end
 
     holding
   end
 
-  def details
+  def get_details
     HoldingDetail.all(where: ['holding_id', '=', id])
+  end
+
+  def details
+    ds = get_details
+    ds.each do |detail|
+
+    end
   end
 
 end

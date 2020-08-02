@@ -17,7 +17,8 @@ RSpec.describe User, :type => :model do
           ticker_symbol: 'SPY',
           name: 'SP500',
           purchase_price: 10.01,
-          purchase_count: 3
+          purchase_count: 3,
+          purchase_date: '2020/07/20'
         )
 
         expect(Holding.all.length).to eq(1)
