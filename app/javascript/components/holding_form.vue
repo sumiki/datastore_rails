@@ -86,10 +86,10 @@
     props: ['accountId'],
     data () {
       return {
-        formTickerSymbol: '',
-        formName: '',
-        formPurchaseCount: '',
-        formPurchasePrice: '',
+        formTickerSymbol: 'SPY',
+        formName: 'SP500',
+        formPurchaseCount: '1',
+        formPurchasePrice: '1.01',
         errorTickerSymbol: [],
         errorName: [],
         errorPurchaseCount: [],
@@ -172,20 +172,14 @@
             purchaseCount: parseInt(this.formPurchaseCount),
             purchasePrice: parseFloat(this.formPurchasePrice),
           },
-          // Update the cache with the result
-          // The query will be updated with the optimistic response
-          // and then with the real result of the mutation
-          update: (store, { data: { addTag } }) => {
-
-          },
         }).then((data) => {
           // Result
-          console.log(data)
+          console.log(data.data.createHolding)
         }).catch((error) => {
           // Error
-          console.error(error)
+          console.log('--error--')
+          console.log(error)
           // We restore the initial user input
-          this.newTag = newTag
         })
 
       }

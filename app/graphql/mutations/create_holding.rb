@@ -19,6 +19,7 @@ class Mutations::CreateHolding < Mutations::BaseMutation
     holding.ticker_symbol = ticker_symbol
     holding.name = name
     holding.save
+
     purchase_count.times do |cnt|
       detail = HoldingDetail.new(
         ticker_symbol: ticker_symbol,
