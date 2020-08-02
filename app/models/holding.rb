@@ -3,13 +3,14 @@ class Holding < DatastoreBase
   attr_accessor :user_id,
                 :account_id,
                 :ticker_symbol,
-                :name
+                :name,
+                :aggregate_details
 
     def entity_properties
-      %w[user_id account_id ticker_symbol name details]
+      %w[user_id account_id ticker_symbol name aggregate_details]
     end
 
-  def self.aggregate_list(holdings)
+  def self.aggregate_details(holdings)
     hash = {}
     holdings.each do |holding|
       hash[holding.ticker_symbol] ||= {}
@@ -22,13 +23,19 @@ class Holding < DatastoreBase
   end
 
   def self.purchase(user_id:, account_id:, ticker_symbol:, name:, purchase_price:, purchase_count:, purchase_date:)
-    holding = Holding.new
-    holding.account_id = account_id
-    holding.user_id = user_id
-    holding.account_id = nil
-    holding.ticker_symbol = ticker_symbol
-    holding.name = name
-    holding.save
+    holding = Holding.all(where:
+                  [[ 'user_id', '=', user_id ],
+                   ['account_id', '=', account_id],
+                   ['ticker_symbol', '=', ticker_symbol]]
+    ).first
+    if holding.blank?
+      holding = Holding.new
+      holding.account_id = account_id
+      holding.user_id = user_id
+      holding.ticker_symbol = ticker_symbol
+      holding.name = name
+      holding.save
+    end
 
     purchase_count.times do |cnt|
       detail = HoldingDetail.new(
@@ -43,15 +50,23 @@ class Holding < DatastoreBase
     holding
   end
 
-  def get_details
-    HoldingDetail.all(where: ['holding_id', '=', id])
+  def set_aggregate_details
+    hash = {}
+    details.each do |detail|
+      key = "#{detail.purchase_date}_#{detail.purchase_price}"
+      hash[key] ||= {}
+      hash[key][:purchase_date] = detail.purchase_date
+      hash[key][:count] ||= 0
+      hash[key][:count] += 1
+      hash[key][:price] ||= 0.0
+      hash[key][:price] += detail.purchase_price
+    end
+    self.aggregate_details = hash.keys.map{|key| hash[key].to_json }
+    save!
   end
 
   def details
-    ds = get_details
-    ds.each do |detail|
-
-    end
+    HoldingDetail.all(where: ['holding_id', '=', id])
   end
 
 end
