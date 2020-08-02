@@ -1,18 +1,11 @@
 require "rails_helper"
 
 RSpec.describe User, :type => :model do
-
-  def clear_datastore
-    User.all.each do |user|
-      user.destroy
-    end
+  before do
+    clear_datastore
   end
 
   describe 'save' do
-    before do
-      clear_datastore
-    end
-
     it 'should create' do
       user = User.new
       user.email = 'sumikio@gmail.com'

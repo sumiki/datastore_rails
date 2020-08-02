@@ -156,8 +156,8 @@
         // Call to the graphql mutation
         this.$apollo.mutate({
           // Query
-          mutation: gql`mutation ($tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!){
-            createHolding(input: { name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice }) {
+          mutation: gql`mutation ($accountId: Int!, $tickerSymbol: String!, $name: String!, $purchaseCount: Int!, $purchasePrice: Float!){
+            createHolding(input: { accountId: $accountId, name: $name, tickerSymbol: $tickerSymbol, purchaseCount: $purchaseCount, purchasePrice: $purchasePrice }) {
               holding {
                 name
                 tickerSymbol
@@ -167,6 +167,7 @@
           }`,
           // Parameters
           variables: {
+            accountId: parseInt(this.accountId),
             tickerSymbol: this.formTickerSymbol,
             name: this.formName,
             purchaseCount: parseInt(this.formPurchaseCount),

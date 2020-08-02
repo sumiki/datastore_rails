@@ -1,4 +1,5 @@
 class Mutations::CreateHolding < Mutations::BaseMutation
+  argument :account_id, Int, required: true
   argument :name, String, required: true
   argument :ticker_symbol, String, required: true
   argument :purchase_count, Int, required: true
@@ -7,26 +8,16 @@ class Mutations::CreateHolding < Mutations::BaseMutation
   field :holding, Types::HoldingType, null: false
   field :errors, [String], null: false
 
-  def resolve(name:, ticker_symbol:, purchase_count:, purchase_price:)
-    holding = Holding.new(
+  def resolve(name:, account_id: ,ticker_symbol:, purchase_count:, purchase_price:)
+    user_id = context[:current_user]&.[](:id)
+    holding = Holding.purchase(
+      user_id: user_id,
+      account_id: account_id,
+      ticker_symbol: ticker_symbol,
       name: name,
-      ticker_symbol: ticker_symbol
+      purchase_count: purchase_count,
+      purchase_price: purchase_price
     )
-
-    holding = Holding.new
-    holding.user_id = nil
-    holding.account_id = nil
-    holding.ticker_symbol = ticker_symbol
-    holding.name = name
-    holding.save
-
-    purchase_count.times do |cnt|
-      detail = HoldingDetail.new(
-        ticker_symbol: ticker_symbol,
-        holding_id: holding.id,
-        purchase_price: purchase_price)
-      detail.save
-    end
 
     {
       holding: holding,

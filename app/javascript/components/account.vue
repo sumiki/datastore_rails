@@ -23,6 +23,7 @@
     </table>
     <HoldingForm
         v-if="modalHoldingFlag"
+        :accountId="accountId"
         @closeHoldingModal="closeHoldingModal"
     ></HoldingForm>
   </div>
