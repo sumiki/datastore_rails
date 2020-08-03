@@ -56,6 +56,7 @@ export default {
     },
     closeHoldingModal: function(event) {
       this.modalHoldingFlag = false
+      this.$apollo.queries.allHoldings.refetch()
     }
   },
   apollo: {
