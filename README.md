@@ -1,4 +1,7 @@
-# Deploying on Cloud Run
+# Experiment project using Rails, Applo Vue, graphql, Datastore, Cloud Run
+
+## Deploy
+
 GOOGLE_CLOUD_PROJECT=norcal-282302
 
 RAILS_ENV=production bundle exec rails assets:precompile
@@ -14,3 +17,4 @@ docker push us.gcr.io/${GOOGLE_CLOUD_PROJECT}/datastore_rails:0.0.1
 gcloud run deploy --image=us.gcr.io/${GOOGLE_CLOUD_PROJECT}/datastore_rails:0.0.1 --platform managed --concurrency 1
 
 terraform apply -var-file=prod.tfvars
+
