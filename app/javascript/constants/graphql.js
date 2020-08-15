@@ -5,6 +5,8 @@ export const ALL_HOLDINGS_QUERY = gql`
     allHoldings(accountId: $accountId) {
       name
       tickerSymbol
+      totalCount
+      holdingCount
       aggregateDetails {
         purchaseDate
         count

@@ -13,11 +13,13 @@
       <tr>
         <th :class="tableThStyle">Ticker</th>
         <th :class="tableThStyle">Name</th>
+        <th :class="tableThStyle">Count</th>
         <th :class="tableThStyle">Details</th>
       </tr>
       <tr v-for="holding in allHoldings" :class="tableTrStyle">
         <td :class="tableTdStyle"><div v-text="holding.tickerSymbol"></div></td>
         <td :class="tableTdStyle"><div v-text="holding.name"></div></td>
+        <td :class="tableTdStyle">{{ `${holding.holdingCount} / ${holding.totalCount}` }}</td>
         <td :class="tableTdStyle">
           <table>
             <tr v-for="detail in holding.aggregateDetails">
