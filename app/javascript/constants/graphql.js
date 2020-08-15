@@ -5,7 +5,11 @@ export const ALL_HOLDINGS_QUERY = gql`
     allHoldings(accountId: $accountId) {
       name
       tickerSymbol
-      aggregateDetails
+      aggregateDetails {
+        purchaseDate
+        count
+        price
+      }
     }
   }
 `

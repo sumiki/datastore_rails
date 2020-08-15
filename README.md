@@ -18,3 +18,9 @@ gcloud run deploy --image=us.gcr.io/${GOOGLE_CLOUD_PROJECT}/datastore_rails:0.0.
 
 terraform apply -var-file=prod.tfvars
 
+## Development
+
+Start Datastore locally
+```
+gcloud beta emulators datastore start
+```

@@ -19,7 +19,7 @@ class Mutations::CreateHolding < Mutations::BaseMutation
       name: name,
       purchase_count: purchase_count,
       purchase_price: purchase_price,
-      purchase_date: purchase_date_obj,
+      purchase_date: purchase_date_obj.strftime('%Y/%m/%d'),
     )
     holding.set_aggregate_details
     {

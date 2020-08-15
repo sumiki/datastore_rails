@@ -4,11 +4,15 @@ class Holding < DatastoreBase
                 :account_id,
                 :ticker_symbol,
                 :name,
-                :aggregate_details
+                :aggregate_details_json
 
-    def entity_properties
-      %w[user_id account_id ticker_symbol name aggregate_details]
-    end
+  def entity_properties
+    %w[user_id account_id ticker_symbol name aggregate_details_json]
+  end
+
+  def additional_properties
+    %w[aggregate_details]
+  end
 
   def self.all_aggregate_details(holdings)
     holdings.map{|item| item.properties_with_id }
@@ -42,6 +46,10 @@ class Holding < DatastoreBase
     holding
   end
 
+  def aggregate_details
+    JSON.parse(self.aggregate_details_json)
+  end
+
   def set_aggregate_details
     hash = {}
     details.each do |detail|
@@ -53,7 +61,7 @@ class Holding < DatastoreBase
       hash[key][:price] ||= 0.0
       hash[key][:price] += detail.purchase_price
     end
-    self.aggregate_details = hash.keys.map{|key| hash[key].to_json }
+    self.aggregate_details_json = hash.keys.map{|key| hash[key] }.to_json
     save!
   end
 

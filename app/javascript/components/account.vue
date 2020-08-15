@@ -9,19 +9,23 @@
         Button
       </button>
     </div>
-    <table>
-      <th>
-        <td>Ticker</td>
-        <td>Name</td>
-        <td>Count</td>
-      </th>
-      <tr v-for="holding in allHoldings">
-        <td><div v-text="holding.tickerSymbol"></div></td>
-        <td><div v-text="holding.name"></div></td>
-        <td>
-          <div v-for="detail in holding.aggregateDetails">
-            <div v-text="detail"></div>
-          </div>
+    <table class="text-left w-full border-collapse">
+      <tr>
+        <th :class="tableThStyle">Ticker</th>
+        <th :class="tableThStyle">Name</th>
+        <th :class="tableThStyle">Details</th>
+      </tr>
+      <tr v-for="holding in allHoldings" :class="tableTrStyle">
+        <td :class="tableTdStyle"><div v-text="holding.tickerSymbol"></div></td>
+        <td :class="tableTdStyle"><div v-text="holding.name"></div></td>
+        <td :class="tableTdStyle">
+          <table>
+            <tr v-for="detail in holding.aggregateDetails">
+              <td :class="detailTdDate" v-text="detail.purchaseDate"></td>
+              <td :class="detailTdCount" v-text="detail.count"></td>
+              <td :class="detailTdPrice" v-text="detail.price"></td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
@@ -49,6 +53,26 @@ export default {
       loading: 0,
       modalHoldingFlag: false,
     }
+  },
+  computed: {
+    tableThStyle(){
+      return 'py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light'
+    },
+    tableTrStyle(){
+      return 'hover:bg-grey-lighter'
+    },
+    tableTdStyle(){
+      return 'py-4 px-6 border-b border-grey-light'
+    },
+    detailTdDate(){
+      return 'pl-4'
+    },
+    detailTdCount(){
+      return 'pl-4 text-right'
+    },
+    detailTdPrice(){
+      return 'pl-4 text-right'
+    },
   },
   methods: {
     openHoldingModal: function (event) {
