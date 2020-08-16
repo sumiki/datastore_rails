@@ -54,11 +54,11 @@
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Selling Price</label>
-                <input type="text" :value="formSellingPrice" class="p-1 border" name="name" >
+                <input type="text" v-model="formSellingPrice" class="p-1 border" name="name" >
               </div>
               <div class="m-3">
                 <label class="block text-sm leading-5 text-gray-500">Selling Count</label>
-                <input type="text" :value="formSellingCount" class="p-1 border" name="name" placeholder="999.99" >
+                <input type="text" v-model="formSellingCount" class="p-1 border" name="name" placeholder="999.99" >
               </div>
             </div>
           </div>

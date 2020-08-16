@@ -26,14 +26,20 @@
               <td :class="detailTdDate" v-text="detail.purchaseDate"></td>
               <td :class="detailTdCount" v-text="detail.count"></td>
               <td :class="detailTdPrice" v-text="detail.purchasePrice"></td>
-              <td :class="detailTdPrice" v-text="detail.price"></td>
+              <td :class="detailTdPrice" v-text="detail.purchasePriceTotal"></td>
               <td :class="detailTdAction">
-                <button
-                    @click="(e) => { openSellingModal( e, holding, detail) }"
-                    class="flex-grow-0 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
-                >
-                  Sell
-                </button>
+                <div v-if="!!!detail.soldDate">
+                  <button
+                      @click="(e) => { openSellingModal( e, holding, detail) }"
+                      class="flex-grow-0 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
+                  >
+                    Sell
+                  </button>
+                </div>
+                <div v-else>
+                  <span v-text="detail.soldDate"></span> <span v-text="detail.soldPrice"></span>
+                </div>
+
               </td>
             </tr>
           </table>

@@ -48,6 +48,50 @@ class Holding < DatastoreBase
     holding
   end
 
+  def self.sell(user_id: ,account_id: ,ticker_symbol:, purchase_price:, purchase_date:,
+                selling_count:, selling_price:, selling_date:)
+
+    holding = Holding.all(where: [
+      ['account_id', '=', account_id],
+      ['user_id', '=', user_id],
+      ['ticker_symbol', '=', ticker_symbol],
+    ]).first
+
+    if holding.blank?
+      return {
+        holding: {},
+        errors: [
+          ticker_symbol: ['Symbol not found']
+        ]
+      }
+    end
+    holding_details = HoldingDetail.all(where: [
+      ['holding_id', '=', holding.id],
+      ['purchase_price', '=', purchase_price],
+      ['purchase_date', '=', purchase_date],
+    ])
+    holding_details = holding_details.select{|item| item.sold_date.blank? }
+    if selling_count > holding_details.length
+      return {
+        holding: {},
+        errors: [
+          selling_count: ['Not enough Inventory']
+        ]
+      }
+    end
+    selling_count.times do |i|
+      detail = holding_details[i]
+      detail.sold_price = selling_price
+      detail.sold_date = selling_date
+      detail.save
+    end
+    holding.set_aggregate_details
+    {
+      holding: holding,
+      errors: []
+    }
+  end
+
   def aggregate_details
     JSON.parse(self.aggregate_details_json)
   end
@@ -62,9 +106,11 @@ class Holding < DatastoreBase
       hash[key][:purchase_date] = detail.purchase_date
       hash[key][:count] ||= 0
       hash[key][:count] += 1
-      hash[key][:price] ||= 0.0
-      hash[key][:price] += detail.purchase_price
+      hash[key][:purchase_price_total] ||= 0.0
+      hash[key][:purchase_price_total] += detail.purchase_price
       hash[key][:purchase_price] ||= detail.purchase_price
+      hash[key][:sold_price] ||= detail.sold_price
+      hash[key][:sold_date] ||= detail.sold_date
       tcnt += 1
       hcnt += 1 if detail.sold_price.blank?
     end

@@ -11,7 +11,9 @@ export const ALL_HOLDINGS_QUERY = gql`
         purchaseDate
         count
         purchasePrice
-        price
+        purchasePriceTotal
+        soldPrice
+        soldDate
       }
     }
   }
