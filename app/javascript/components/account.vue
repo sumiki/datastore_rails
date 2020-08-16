@@ -25,6 +25,7 @@
             <tr v-for="detail in holding.aggregateDetails">
               <td :class="detailTdDate" v-text="detail.purchaseDate"></td>
               <td :class="detailTdCount" v-text="detail.count"></td>
+              <td :class="detailTdPrice" v-text="detail.purchasePrice"></td>
               <td :class="detailTdPrice" v-text="detail.price"></td>
               <td :class="detailTdAction">
                 <button
@@ -46,6 +47,7 @@
     ></HoldingForm>
     <SellingForm
       v-if="modalSellingFlag"
+      :accountId="accountId"
       :holding="modalSellingHolding"
       :aggDetail="modalSellingDetail"
       @closeSellingModal="closeSellingModal"

@@ -102,7 +102,7 @@
   </div>
 </template>
 <script>
-import { CREATE_HOLDING_MUTATION } from '../constants/graphql'
+import {SELLING_HOLDING_MUTATION} from '../constants/graphql'
 export default {
   props: [
       'accountId',
@@ -120,7 +120,7 @@ export default {
   },
   mounted: function(){
     this.formSellingCount = this.aggDetail.count
-    this.formSellingPrice = this.aggDetail.price
+    this.formSellingPrice = this.aggDetail.purchasePrice
 
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
@@ -134,6 +134,30 @@ export default {
     },
     handleSubmit(e){
       e.preventDefault()
+
+      this.$apollo.mutate({
+        // Query
+        mutation: SELLING_HOLDING_MUTATION,
+        // Parameters
+        variables: {
+          accountId: parseInt(this.accountId),
+          tickerSymbol: this.holding.tickerSymbol,
+          purchasePrice: parseFloat(this.aggDetail.purchasePrice),
+          purchaseDate: this.aggDetail.purchaseDate,
+
+          sellingCount: parseInt(this.formSellingCount),
+          sellingPrice: parseFloat(this.formSellingPrice),
+          sellingDate: this.formSellingDate,
+        },
+      }).then((data) => {
+        // Result
+        this.flagSubmitConfirmation = true
+      }).catch((error) => {
+        // Error
+        console.log('--error--')
+        console.log(error)
+        // We restore the initial user input
+      })
 
     },
   },

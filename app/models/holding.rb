@@ -57,13 +57,14 @@ class Holding < DatastoreBase
     tcnt = 0
     hcnt = 0
     details.each do |detail|
-      key = "#{detail.purchase_date}_#{detail.purchase_price}"
+      key = "#{detail.purchase_date}_#{detail.purchase_price}_#{detail.sold_price}"
       hash[key] ||= {}
       hash[key][:purchase_date] = detail.purchase_date
       hash[key][:count] ||= 0
       hash[key][:count] += 1
       hash[key][:price] ||= 0.0
       hash[key][:price] += detail.purchase_price
+      hash[key][:purchase_price] ||= detail.purchase_price
       tcnt += 1
       hcnt += 1 if detail.sold_price.blank?
     end
