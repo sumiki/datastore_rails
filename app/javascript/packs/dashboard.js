@@ -14,7 +14,7 @@ import VueApollo from 'vue-apollo'
 
 import Account from '../components/account.vue'
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: '/graphql',
 })
 const middlewareLink = setContext(() => ({
   headers: {

@@ -6,7 +6,7 @@
           @click="openHoldingModal"
           class="flex-grow-0 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
       >
-        Button
+        Purchase
       </button>
     </div>
     <table class="text-left w-full border-collapse">
@@ -26,6 +26,14 @@
               <td :class="detailTdDate" v-text="detail.purchaseDate"></td>
               <td :class="detailTdCount" v-text="detail.count"></td>
               <td :class="detailTdPrice" v-text="detail.price"></td>
+              <td :class="detailTdAction">
+                <button
+                    @click="(e) => { openSellingModal( e, holding, detail) }"
+                    class="flex-grow-0 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
+                >
+                  Sell
+                </button>
+              </td>
             </tr>
           </table>
         </td>
@@ -36,6 +44,14 @@
         :accountId="accountId"
         @closeHoldingModal="closeHoldingModal"
     ></HoldingForm>
+    <SellingForm
+      v-if="modalSellingFlag"
+      :holding="modalSellingHolding"
+      :aggDetail="modalSellingDetail"
+      @closeSellingModal="closeSellingModal"
+    >
+    </SellingForm>
+
   </div>
 </template>
 
@@ -43,17 +59,22 @@
 
 import { ALL_HOLDINGS_QUERY } from '../constants/graphql'
 import HoldingForm from './holding_form'
+import SellingForm from './selling_form'
 
 export default {
   props: ['accountId'],
   components: {
-    HoldingForm
+    HoldingForm,
+    SellingForm,
   },
   data () {
     return {
       allHoldings: [],
       loading: 0,
       modalHoldingFlag: false,
+      modalSellingFlag: false,
+      modalSellingHolding: null,
+      modalSellingDetail: null,
     }
   },
   computed: {
@@ -75,6 +96,9 @@ export default {
     detailTdPrice(){
       return 'pl-4 text-right'
     },
+    detailTdAction(){
+      return 'pl-4 text-right'
+    },
   },
   methods: {
     openHoldingModal: function (event) {
@@ -83,7 +107,18 @@ export default {
     closeHoldingModal: function(event) {
       this.modalHoldingFlag = false
       this.$apollo.queries.allHoldings.refetch()
-    }
+    },
+    openSellingModal: function(e, holding, aggDetail) {
+      this.modalSellingFlag = true
+      this.modalSellingHolding = holding
+      this.modalSellingDetail = aggDetail
+    },
+    closeSellingModal: function(){
+      this.modalSellingFlag = false
+      this.modalSellingHolding = null
+      this.modalSellingDetail = null
+      this.$apollo.queries.allHoldings.refetch()
+    },
   },
   apollo: {
     allHoldings: {
