@@ -21,7 +21,7 @@ class Mutations::CreateHolding < Mutations::BaseMutation
       purchase_price: purchase_price,
       purchase_date: purchase_date_obj.strftime('%Y/%m/%d'),
     )
-    holding.set_aggregate_details
+    HoldingAggregateDetailsJob.set(wait: HoldingAggregateDetailsJob::WAIT.second).perform_later(holding_id: holding.id)
     {
       holding: holding,
       errors: []

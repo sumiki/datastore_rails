@@ -41,3 +41,15 @@ export const SELLING_HOLDING_MUTATION = gql`
     }
   }
 `
+
+export const DELETING_HOLDING_MUTATION = gql`
+  mutation ($accountId: Int!, $tickerSymbol: String!, $purchasePrice: Float!, $purchaseDate: String!, ){
+    deletingHolding(input: { accountId: $accountId, tickerSymbol: $tickerSymbol, purchasePrice: $purchasePrice, purchaseDate: $purchaseDate, }) {
+      holding {
+        name
+        tickerSymbol
+      }
+      errors
+    }
+  }
+`

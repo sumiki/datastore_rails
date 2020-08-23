@@ -39,7 +39,14 @@
                 <div v-else>
                   <span v-text="detail.soldDate"></span> <span v-text="detail.soldPrice"></span>
                 </div>
-
+              </td>
+              <td>
+                <button
+                    @click="(e) => { openDeletingModal( e, holding, detail) }"
+                    class="flex-grow-0 bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           </table>
@@ -59,7 +66,13 @@
       @closeSellingModal="closeSellingModal"
     >
     </SellingForm>
-
+    <DeletingForm
+        v-if="modalDeletingFlag"
+        :accountId="accountId"
+        :holding="modalSellingHolding"
+        :aggDetail="modalSellingDetail"
+        @closeDeletingModal="closeDeletingModal"
+    ></DeletingForm>
   </div>
 </template>
 
@@ -68,12 +81,14 @@
 import { ALL_HOLDINGS_QUERY } from '../constants/graphql'
 import HoldingForm from './holding_form'
 import SellingForm from './selling_form'
+import DeletingForm from './deleting_form'
 
 export default {
   props: ['accountId'],
   components: {
     HoldingForm,
     SellingForm,
+    DeletingForm,
   },
   data () {
     return {
@@ -81,6 +96,7 @@ export default {
       loading: 0,
       modalHoldingFlag: false,
       modalSellingFlag: false,
+      modalDeletingFlag: false,
       modalSellingHolding: null,
       modalSellingDetail: null,
     }
@@ -127,6 +143,17 @@ export default {
       this.modalSellingDetail = null
       this.$apollo.queries.allHoldings.refetch()
     },
+    openDeletingModal: function(e, holding, aggDetail) {
+      this.modalDeletingFlag = true
+      this.modalSellingHolding = holding
+      this.modalSellingDetail = aggDetail
+    },
+    closeDeletingModal: function(){
+      this.modalDeletingFlag = false
+      this.modalSellingHolding = null
+      this.modalSellingDetail = null
+      this.$apollo.queries.allHoldings.refetch()
+    }
   },
   apollo: {
     allHoldings: {

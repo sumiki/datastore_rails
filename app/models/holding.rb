@@ -48,29 +48,39 @@ class Holding < DatastoreBase
     holding
   end
 
-  def self.sell(user_id: ,account_id: ,ticker_symbol:, purchase_price:, purchase_date:,
-                selling_count:, selling_price:, selling_date:)
-
+  def self.select_details(user_id: ,account_id: ,ticker_symbol:, purchase_price:, purchase_date:)
     holding = Holding.all(where: [
       ['account_id', '=', account_id],
       ['user_id', '=', user_id],
       ['ticker_symbol', '=', ticker_symbol],
     ]).first
+    return if holding.blank?
 
-    if holding.blank?
-      return {
-        holding: {},
-        errors: [
-          ticker_symbol: ['Symbol not found']
-        ]
-      }
-    end
-    holding_details = HoldingDetail.all(where: [
+    [holding, HoldingDetail.all(where: [
       ['holding_id', '=', holding.id],
       ['purchase_price', '=', purchase_price],
       ['purchase_date', '=', purchase_date],
-    ])
+    ])]
+  end
+
+  def self.sell(user_id: ,account_id: ,ticker_symbol:, purchase_price:, purchase_date:,
+                selling_count:, selling_price:, selling_date:)
+
+    holding, holding_details = select_details(
+      user_id: user_id,
+      account_id: account_id,
+      ticker_symbol: ticker_symbol,
+      purchase_price: purchase_price,
+      purchase_date: purchase_date
+    )
+    return {
+      holding: {},
+      errors: [
+        ticker_symbol: ['Symbol not found']
+      ]
+    } if holding_details.blank?
     holding_details = holding_details.select{|item| item.sold_date.blank? }
+
     if selling_count > holding_details.length
       return {
         holding: {},
@@ -85,7 +95,7 @@ class Holding < DatastoreBase
       detail.sold_date = selling_date
       detail.save
     end
-    holding.set_aggregate_details
+    HoldingAggregateDetailsJob.set(wait: HoldingAggregateDetailsJob::WAIT.second).perform_later(holding_id: holding.id)
     {
       holding: holding,
       errors: []
@@ -94,6 +104,30 @@ class Holding < DatastoreBase
 
   def aggregate_details
     JSON.parse(self.aggregate_details_json)
+  end
+
+  def self.delete_details(user_id: ,account_id: ,ticker_symbol:, purchase_price:, purchase_date:)
+    holding, holding_details = select_details(
+      user_id: user_id,
+      account_id: account_id,
+      ticker_symbol: ticker_symbol,
+      purchase_price: purchase_price,
+      purchase_date: purchase_date
+    )
+    return {
+      holding: {},
+      errors: [
+        ticker_symbol: ['Symbol not found']
+      ]
+    } if holding_details.blank?
+    holding_details.each do |item|
+      item.destroy
+    end
+    HoldingAggregateDetailsJob.set(wait: HoldingAggregateDetailsJob::WAIT.second).perform_later(holding_id: holding.id)
+    {
+      holding: holding,
+      errors: []
+    }
   end
 
   def set_aggregate_details
